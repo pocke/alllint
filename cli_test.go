@@ -7,6 +7,6 @@ import (
 )
 
 func TestImplementPFlagValue(t *testing.T) {
-	s := StringSlice(make([]string, 0))
+	s := make(Commands, 0)
 	var _ pflag.Value = &s
 }
