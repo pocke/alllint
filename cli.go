@@ -7,13 +7,15 @@ import (
 )
 
 type CLI struct {
-	Commands []Command
+	Commands Commands
 }
 
 func (c *CLI) Parse(args []string) error {
-	cmds := Commands(make(Commands, 0))
+	cmds := make(Commands, 0)
+	c.Commands = cmds
+
 	fset := pflag.NewFlagSet(args[0], pflag.ContinueOnError)
-	fset.VarP(&cmds, "commands", "c", "commands")
+	fset.VarP(&c.Commands, "command", "c", "command")
 
 	return fset.Parse(args[1:])
 }
