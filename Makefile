@@ -1,7 +1,10 @@
-all:
-	go get github.com/jteeuwen/go-bindata/...
-	go-bindata conf/
+all: depends
 	go build
 
-test: all
+depends:
+	go get github.com/jteeuwen/go-bindata/...
+	go-bindata conf/
+	go get
+
+test: depends
 	go test -v --race
