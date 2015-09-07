@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/naoina/toml"
@@ -10,8 +11,19 @@ type Config struct {
 	Lints []Lint
 }
 
+func (c *Config) FindLint(name string) (*Lint, error) {
+	for _, l := range c.Lints {
+		if l.Name == name {
+			return &l, nil
+		}
+	}
+	return nil, fmt.Errorf("%s does not found", name)
+
+}
+
 type Regexp regexp.Regexp
 
+// TODO: 正規表現以外
 type Lint struct {
 	Name    string  `toml:"name"`
 	Regexp  *Regexp `toml:"regexp"`
