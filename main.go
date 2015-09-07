@@ -1,6 +1,9 @@
 package main
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
 	c := &CLI{}
@@ -8,4 +11,10 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
+	f, err := c.Exec()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	fmt.Println(f)
 }

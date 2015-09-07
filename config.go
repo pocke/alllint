@@ -33,8 +33,12 @@ type Lint struct {
 	Message int     `toml:"message"`
 }
 
+func (l *Lint) Re() *regexp.Regexp {
+	return (*regexp.Regexp)(l.Regexp)
+}
+
 func (re *Regexp) UnmarshalTOML(b []byte) error {
-	r, err := regexp.Compile(string(b))
+	r, err := regexp.Compile(string(b[1 : len(b)-1]))
 	if err != nil {
 		return err
 	}

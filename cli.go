@@ -8,6 +8,7 @@ import (
 
 type CLI struct {
 	Commands Commands
+	Files    []string
 }
 
 func (c *CLI) Parse(args []string) error {
@@ -17,14 +18,16 @@ func (c *CLI) Parse(args []string) error {
 	fset := pflag.NewFlagSet(args[0], pflag.ContinueOnError)
 	fset.VarP(&c.Commands, "command", "c", "command")
 
-	return fset.Parse(args[1:])
+	err := fset.Parse(args[1:])
+	c.Files = fset.Args()
+	return err
 }
 
 func (c *CLI) Exec() ([]Failure, error) {
 	res := make([]Failure, 0)
 	// TODO: parallel
 	for _, cmd := range c.Commands {
-		f, err := cmd.Exec()
+		f, err := cmd.Exec(c.Files)
 		if err != nil {
 			return nil, err
 		}
