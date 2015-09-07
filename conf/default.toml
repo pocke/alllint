@@ -1,0 +1,7 @@
+[[Lints]]
+name    = "tslint"
+regexp  = '^(.+)\[(\d+), (\d+)\]: (.+)$'
+fname   = 1
+line    = 2
+col     = 3
+message = 4
