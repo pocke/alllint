@@ -21,11 +21,21 @@ func (c *CLI) Parse(args []string) error {
 }
 
 func (c *CLI) Exec() ([]Failure, error) {
-	// TODO
-	return nil, nil
+	res := make([]Failure, 0)
+	// TODO: parallel
+	for _, cmd := range c.Commands {
+		f, err := cmd.Exec()
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, f...)
+	}
+	return res, nil
 }
 
 type Commands []Command
+
+// for Impement pflag.Value
 
 func (v *Commands) String() string {
 	cmds := make([]string, 0, len(*v))
