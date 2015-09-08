@@ -13,7 +13,7 @@ func TestCommandsImplementPFlagValue(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
-	opts := []string{"alllint", "--command=tslint", "-c", "tsc --noImplicitAny"}
+	opts := []string{"alllint", "--command=tslint", "-c", "tsc --noImplicitAny", "foo.ts", "bar.ts"}
 	c := &CLI{}
 	err := c.Parse(opts)
 	if err != nil {
@@ -26,5 +26,10 @@ func TestParse(t *testing.T) {
 	}
 	if !reflect.DeepEqual(c.Commands, expected) {
 		t.Errorf("\n%+v !=\n%+v", c.Commands, expected)
+	}
+
+	expectedFiles := []string{"foo.ts", "bar.ts"}
+	if !reflect.DeepEqual(c.Files, expectedFiles) {
+		t.Errorf("\n%+v !=\n%+v", c.Files, expectedFiles)
 	}
 }
