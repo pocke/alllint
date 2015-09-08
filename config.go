@@ -38,7 +38,7 @@ func (l *Lint) Re() *regexp.Regexp {
 }
 
 func (re *Regexp) UnmarshalTOML(b []byte) error {
-	r, err := regexp.Compile(string(b[1 : len(b)-1]))
+	r, err := regexp.Compile(string(b[1 : len(b)-1])) // remove quote
 	if err != nil {
 		return err
 	}

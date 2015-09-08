@@ -35,6 +35,7 @@ func (c *Command) parse(b []byte) ([]Failure, error) {
 			continue
 		}
 
+		// TODO: refactor
 		line := -1
 		if i, err := strconv.Atoi(matches[lint.Line]); err == nil {
 			line = i
