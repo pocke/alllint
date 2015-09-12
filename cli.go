@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/ogier/pflag"
 )
@@ -24,16 +26,48 @@ func (c *CLI) Parse(args []string) error {
 }
 
 func (c *CLI) Exec() ([]Failure, error) {
-	res := make([]Failure, 0)
-	// TODO: parallel
-	for _, cmd := range c.Commands {
-		f, err := cmd.Exec(c.Files)
-		if err != nil {
-			return nil, err
-		}
-		res = append(res, f...)
+	if len(c.Commands) == 0 {
+		return nil, fmt.Errorf("cmd is required")
 	}
-	return res, nil
+
+	errCh := make(chan error)
+	failureCh := make(chan []Failure)
+	wg := &sync.WaitGroup{}
+	res := make([]Failure, 0)
+
+	for _, cmd := range c.Commands {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			f, err := cmd.Exec(c.Files)
+			if err != nil {
+				errCh <- err
+				return
+			}
+			failureCh <- f
+		}()
+	}
+
+	waitCh := wgCh(wg)
+	for {
+		select {
+		case <-waitCh:
+			return res, nil
+		case err := <-errCh:
+			return nil, err
+		case f := <-failureCh:
+			res = append(res, f...)
+		}
+	}
+}
+
+func wgCh(wg *sync.WaitGroup) <-chan struct{} {
+	ch := make(chan struct{})
+	go func() {
+		wg.Wait()
+		ch <- struct{}{}
+	}()
+	return ch
 }
 
 type Commands []Command
