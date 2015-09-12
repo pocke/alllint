@@ -5,3 +5,11 @@ fname   = 1
 line    = 2
 col     = 3
 message = 4
+
+[[Lints]]
+name    = "tsc"
+regexp  = '^(.+)\((\d+),(\d+)\): (error TS\d+: .+)$'
+fname   = 1
+line    = 2
+col     = 3
+message = 4
